@@ -3,8 +3,11 @@
 
 ## Description of Project
 - This project is a simple app that allows users to review books and add books.
+
 - It is a school project testing how we use Source Code Management for version control.
+
 - Features of this app include Adding, Editing, Retrieving, and Deleting  of books. 
+
 - Searching for specific books using search bar
 
 ## Contributors and their respective contributions
