@@ -11,11 +11,11 @@
 
 ### Xavier😎
 - Created Retrieve function for books in BookServlet1
-- 
+
 - Created Delete function for books in BookServlet1
-- 
+
 - Created Sort by ascending and descending function in BookServlet1
-- 
+
 - Created Sort by likes function in BookServlet1
 
 ### Javier😎
@@ -48,11 +48,11 @@
 <img src ="https://user-images.githubusercontent.com/85160539/152654454-13bacacd-9246-4455-9d5c-4d8a06bb8a36.jpg" width=25% height=25%>
 
 - Created BookServlet1.java with basic structure and Book.java class object.
-- 
+
 - Coded Create and Update operations for BookServlet1.java on Book database.
-- 
+
 - Coded Search function for BookServlet1.java to query specific books on Book database.
-- 
+
 - Resolved merge conflicts manually in Visual Studio Code that arose when merging contributors' branches.
-- 
+
 - Fixed some bugs for general routing in web.xml, and CRUD operations in BookServlet1.java.
