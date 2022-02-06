@@ -34,7 +34,14 @@ public class BookServlet1 extends HttpServlet {
 	private static final String SELECT_ALL_BOOKS = "select * from bookdetails ;";
 	private static final String DELETE_BOOK_SQL = "delete from bookdetails where bookName = ?;";
 	private static final String UPDATE_BOOK_SQL = "update bookdetails set bookName = ?,bookAuthor=?,bookDesc=?, bookLikes=? where bookName=?;";
-	
+	//Sort By Name Ascending
+	private static final String SELECT_ALL_BOOKS_ORDER_BY_bookName_ASC = "SELECT bookName, bookDesc, bookAuthor, bookLikes from booksdetails ORDER BY bookName ASC where bookName = ?;";
+	//Sort By Name Descending
+		private static final String SELECT_ALL_BOOKS_ORDER_BY_bookName_DESC = "SELECT bookName, bookDesc, bookAuthor, bookLikes from booksdetails ORDER BY bookName DESC where bookName = ?;";
+		//Sort By Likes
+		private static final String SELECT_ALL_BOOKS_ORDER_BY_bookLikes= "SELECT bookName, bookDesc, bookAuthor, bookLikes from booksdetails ORDER BY bookLikes DESC where bookName = ?;";
+		// Select all books by that contains search input(used for search)
+		private static final String SELECT_BOOKS_BY_NAME = "SELECT * FROM booksdetails where bookName like %?%;";
 	
 	
 	protected Connection getConnection() {
@@ -83,6 +90,18 @@ public class BookServlet1 extends HttpServlet {
 			 			case "/BookServlet1/dashboard":
 			 				listBooks(request,response);
 			 			break;
+			 			case "/BookServlet/search":
+			 				searchBooks(request, response);
+			 				break;
+			 			case "/BookServlet/Ascending":
+			 				listBooksByNameAsc(request, response);
+			 				break;
+			 			case "/BookServlet/Descending":
+			 				listBooksByNameDesc(request, response);
+			 				break;
+			 			case "/BookServlet/Likes":
+			 				listBooksByLikes(request, response);
+			 				break;
 			 	}
 		 } catch (SQLException ex) {
 			 	throw new ServletException(ex);
@@ -203,5 +222,106 @@ public class BookServlet1 extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
+	//Sort By Name Ascending
+		private void listBooksByNameAsc(HttpServletRequest request, HttpServletResponse response)
+				throws SQLException, IOException, ServletException
+				{
+					List <Book> books = new ArrayList <>();
+					try (Connection connection = getConnection();
+							PreparedStatement statement = connection.prepareStatement(SELECT_ALL_BOOKS_ORDER_BY_bookName_ASC);) {
+						
+								ResultSet rs = statement.executeQuery();
+								
+								while (rs.next()) {
+									String bookName = rs.getString("bookName");
+									String bookDesc = rs.getString("bookDesc");
+									String bookAuthor = rs.getString("bookAuthor");
+									int bookLikes = rs.getInt("bookLikes");
+									books.add (new Book(bookName, bookDesc, bookAuthor, bookLikes));
+								}
+					} catch (SQLException e) {
+						System.out.println(e.getMessage());
+					}
+					request.setAttribute("listBooks", books);
+					request.getRequestDispatcher("/bookManagement.jsp").forward(request, response);
+				}
+		
+		//Sort By Name Descending
+		private void listBooksByNameDesc(HttpServletRequest request, HttpServletResponse response)
+				throws SQLException, IOException, ServletException
+				{
+					List <Book> books = new ArrayList <>();
+					try (Connection connection = getConnection();
+							PreparedStatement statement = connection.prepareStatement(SELECT_ALL_BOOKS_ORDER_BY_bookName_DESC);) {
+						
+								ResultSet rs = statement.executeQuery();
+								
+								while (rs.next()) {
+									String bookName = rs.getString("bookName");
+									String bookDesc = rs.getString("bookDesc");
+									String bookAuthor = rs.getString("bookAuthor");
+									int bookLikes = rs.getInt("bookLikes");
+									books.add (new Book(bookName, bookDesc, bookAuthor, bookLikes));
+								}
+					} catch (SQLException e) {
+						System.out.println(e.getMessage());
+					}
+					request.setAttribute("listBooks", books);
+					request.getRequestDispatcher("/bookManagement.jsp").forward(request, response);
+				}
+		//Sort By likes
+		private void listBooksByLikes(HttpServletRequest request, HttpServletResponse response)
+				throws SQLException, IOException, ServletException
+				{
+					List <Book> books = new ArrayList <>();
+					try (Connection connection = getConnection();
+							PreparedStatement statement = connection.prepareStatement(SELECT_ALL_BOOKS_ORDER_BY_bookLikes);) {
+						
+								ResultSet rs = statement.executeQuery();
+								
+								while (rs.next()) {
+									String bookName = rs.getString("bookName");
+									String bookDesc = rs.getString("bookDesc");
+									String bookAuthor = rs.getString("bookAuthor");
+									int bookLikes = rs.getInt("bookLikes");
+									books.add (new Book(bookName, bookDesc, bookAuthor, bookLikes));
+								}
+					} catch (SQLException e) {
+						System.out.println(e.getMessage());
+					}
+					request.setAttribute("listBooks", books);
+					request.getRequestDispatcher("/bookManagement.jsp").forward(request, response);
+				}
+
+
+		
+		
+		
+	// Search for books
+		private void searchBooks(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
+			// Initialize array to store all books retrieved
+			List<Book> books = new ArrayList<>(); 
+			
+			// Try/catch block to attempt connection and query database
+			try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(SELECT_BOOKS_BY_NAME);) {
+				ResultSet rs = statement.executeQuery(); // Execute query
+				
+				// Assign the retrieved data to temporary variables to store incrementally into the books array.
+				while (rs.next()) {
+					String bookName = rs.getString("bookName");
+					String bookDesc = rs.getString("bookDesc");
+					String bookAuthor = rs.getString("bookAuthor");
+					int bookLikes = rs.getInt("bookLikes");
+					
+					books.add(new Book(bookName, bookDesc, bookAuthor, bookLikes));
+				}
+			}
+			catch (SQLException e) {
+				System.out.println(e.getMessage()); // Print error message
+			}
+			// Send the data back to the requesting .jsp
+			request.setAttribute("searchBooks", books);
+			request.getRequestDispatcher("/bookManagement.jsp").forward(request, response);
+		}
 
 }
